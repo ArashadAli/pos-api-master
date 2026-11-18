@@ -61,19 +61,6 @@ HTTP request
    -> SQLAlchemy (database)
    -> JSON response
 ```
-Example: `GET /api/v1/product?__limit=10`
-
-1. **Blueprint.** The blueprint `pos` has `url_prefix='/api/v1'`, so the url is matched here. `@api.register()` made the route `/product` from the model name.
-2. **View.** Flask creates `ProductView`. In `BaseView.__init__` it creates the `ProductResource` and adds the decorators.
-3. **Auth.** If the resource has `auth_required = True`, three decorators are added: `roles_required`, `roles_accepted`, `auth_token_required`. The last one added runs first, so the order is token check -> roles_accepted -> roles_required. A wrong token gives 401, a wrong role gives 403.
-4. **Handler.** `get()` in `BaseView` runs. It reads the query string (`__limit`, `__page`, `__order_by`, `__only`, `__exclude`, `__include` and filters like `name__contains`) and builds the query through the resource.
-5. **Permission.** `has_read_permission(qs)` in the resource limits the query, for example only the data of the user's own brand.
-6. **Database.** SQLAlchemy runs the query with pagination.
-7. **Schema.** `schema.dump(...)` turns the rows into JSON-friendly dicts.
-8. **Response.** The view returns it with `jsonify`, for example `{"success": true, "data": [...], "total": 10}`.
-
-For `POST` / `PUT` / `PATCH` it is the same, but the schema is used the other way: `schema.load(request.json)` validates the data and makes the model objects. If there are errors it returns 400. Then `has_add_permission` / `has_change_permission` is checked, and then `db.session.commit()`. A database error is rolled back and returned as a JSON error.
-Login, logout and register are not written by us. They come from Flask-Security and are on `/api/v1/login/`, `/api/v1/register/` etc. (set in `config.py`).
 ---
 ## 7. Role of each file in `src/utils/`
 
