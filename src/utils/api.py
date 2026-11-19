@@ -94,14 +94,14 @@ class BaseView(Resource):
             if '__export__' in request.args and self.resource.export is True:
                 objects = objects.paginate(page=self.resource.page, per_page=self.resource.max_export_limit)
                 return make_response_from_records(
-                    self.resource.schema(exclude=tuple(self.resource.obj_exclude), only=tuple(self.resource.obj_only))
+                    self.resource.schema(exclude=tuple(self.resource.obj_exclude), only=tuple(self.resource.obj_only) or None)
                         .dump(objects.items, many=True).data, 'csv', 200,  self.resource.model.__name__)
 
             resources = objects.paginate(page=self.resource.page, per_page=self.resource.limit)
             if resources.items:
                 return make_response(jsonify({'success': True,
                                               'data': self.resource.schema(exclude=tuple(self.resource.obj_exclude),
-                                                                           only=tuple(self.resource.obj_only))
+                                                                           only=tuple(self.resource.obj_only) or None)
                                              .dump(resources.items, many=True).data, 'total': resources.total}), 200)
             return make_response(jsonify({'error': True, 'message': 'No Resource Found'}), 404)
 
@@ -176,7 +176,7 @@ class AssociationView(Resource):
             obj = self.resource.has_read_permission(obj).first()
             if obj:
                 return make_response(jsonify(self.resource.schema(exclude=tuple(self.resource.obj_exclude),
-                                                                  only=tuple(self.resource.obj_only)).dump(
+                                                                  only=tuple(self.resource.obj_only) or None).dump(
                     obj, many=False).data), 200)
 
             return make_response(jsonify({'error': True, 'message': 'Resource not found'}), 404)
@@ -191,7 +191,7 @@ class AssociationView(Resource):
             if resources.items:
                 return make_response(jsonify({'success': True,
                                               'data': self.resource.schema(exclude=tuple(self.resource.obj_exclude),
-                                                                           only=tuple(self.resource.obj_only))
+                                                                           only=tuple(self.resource.obj_only) or None)
                                              .dump(resources.items, many=True).data, 'total': resources.total}), 200)
             return make_response(jsonify({'error': True, 'message': 'No Resource Found'}), 404)
 
