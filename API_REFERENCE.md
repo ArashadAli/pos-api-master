@@ -263,25 +263,6 @@ Fetches the Flask-Admin web page for product management.
 - **Headers**:
   - `Authorization: <authentication_token>`
 - **Response**: `200 OK` with full HTML table of products.
-
-> [!NOTE]
-> **REST API Alternative**: If you want JSON data instead of an HTML page, use:
-> **`GET {{auth_base_url}}/product`** with `Authorization: <token>`.
-> This returns a structured JSON payload:
-> ```json
-> {
->   "data": [
->     {
->       "id": "...",
->       "name": "Paracetamol 500mg",
->       "default_quantity": 10,
->       "is_loose": false
->     }
->   ],
->   "success": true,
->   "total": 1
-> }
-> ```
 ---
 ### 8. Get Retail Shop Page (`get-retail_shop_page`)
 Fetches the Flask-Admin web view for retail shops.
