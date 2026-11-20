@@ -369,3 +369,21 @@ class AssociationModelResource(ABC):
     @abstractmethod
     def has_add_permission(self, obj, data) -> bool:
         return True
+
+
+class CommonResource(ModelResource):
+    auth_required = True
+    roles_accepted = ()
+    roles_required = ()
+
+    def has_read_permission(self, qs):
+        return qs
+    
+    def has_change_permission(self, obj):
+        return True
+    
+    def has_delete_permission(self, obj):
+        return True
+    
+    def has_add_permission(self, obj):
+        return True

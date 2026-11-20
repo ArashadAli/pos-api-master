@@ -79,7 +79,7 @@ class BaseView(Resource):
             obj = self.resource.has_read_permission(obj).first()
             if obj:
                 return make_response(jsonify(self.resource.schema(exclude=tuple(self.resource.obj_exclude),
-                                                                  only=tuple(self.resource.obj_only)).dump(
+                                                                  only=tuple(self.resource.obj_only) or None).dump(
                     obj, many=False).data), 200)
 
             return make_response(jsonify({'error': True, 'message': 'Resource not found'}), 404)
